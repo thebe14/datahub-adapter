@@ -1,0 +1,2123 @@
+{
+	"info": {
+		"_postman_id": "5929db18-6e2a-4379-8593-e0483c07953b",
+		"name": "Dataspace Connector v6.x",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Publish Resource",
+			"item": [
+				{
+					"name": "Get connector details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Success\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"connectorId\", jsonData.connectorId);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/hal+json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{connector-provider}}/api/configurations/active",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"configurations",
+								"active"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create catalog",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Catalog is created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"let path = require('path');\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"catalogId\", path.basename(jsonData._links.self.href));\r",
+									"\r",
+									"console.log(\"New catalog is \" + pm.collectionVariables.get(\"catalogId\"));\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Catalog for {{resource-title}}\",\r\n  \"description\": \"Description of catalog for {{resource-title}}\",\r\n  \"space\": \"{{onedata-space}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connector-provider}}/api/catalogs",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"catalogs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create resource",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Resource is created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"let path = require('path');\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"resourceId\", path.basename(jsonData._links.self.href));\r",
+									"\r",
+									"console.log(\"New resource is \" + pm.collectionVariables.get(\"catalogId\"));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"{{resource-title}}\",\r\n  \"description\": \"Description for {{resource-title}}\",\r\n  \"keywords\": [{{resource-keywords}}],\r\n  \"publisher\": \"{{resource-publisher}}\",\r\n  \"language\": \"{{resource-language}}\",\r\n  \"sovereign\": \"{{resource-sovereign}}\",\r\n  \"license\": \"{{resource-license}}\",\r\n  \"paymentMethod\": \"undefined\",\r\n  \"endpointDocumentation\": \"none\",\r\n  \"filename\": \"{{onedata-file-name}}\",\r\n  \"path\": \"/IDS-test-space/folder1/folder2\"    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connector-provider}}/api/offers",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"offers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create representation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Representation is created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"let path = require('path');\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"representationId\", path.basename(jsonData._links.self.href));\r",
+									"\r",
+									"console.log(\"New representation is \" + pm.collectionVariables.get(\"representationId\"));\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Representation for {{resource-title}}\",\r\n  \"description\": \"Description of representation for {{resource-title}}\",\r\n  \"mediaType\": \"text/csv\",\r\n  \"language\": \"{{representation-language}}\",\r\n  \"standard\": \"{{representation-standard}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connector-provider}}/api/representations",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"representations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create artifact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Artifact is created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"let path = require('path');\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"artifactId\", path.basename(jsonData._links.self.href));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Artifact for {{resource-title}}\",\r\n  \"description\": \"Descrition of artifact for {{resource-title}}\",\r\n  \"accessUrl\": \"{{onedata-file-url}}\",  \r\n  \"apiKey\": {\r\n    \"key\": \"X-Auth-Token\",\r\n    \"value\": \"{{onedata-file-token}}\"\r\n  },\r\n  \"filename\": \"{{onedata-file-name}}\",\r\n  \"mediaType\": \"text/csv\",\r\n  \"automatedDownload\": true\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connector-provider}}/api/artifacts",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"artifacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add artifact to representation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Artifact added\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Artifact added to resource\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    let path = require('path');\r",
+									"    pm.expect(path.basename(jsonData._embedded.artifacts[0]._links.self.href)).to.eql(pm.collectionVariables.get(\"artifactId\"))\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\"{{artifactId}}\"]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connector-provider}}/api/representations/{{representationId}}/artifacts",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"representations",
+								"{{representationId}}",
+								"artifacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add representation to resource",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Representation added\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Representation added to resource\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    let path = require('path');\r",
+									"    pm.expect(path.basename(jsonData._embedded.representations[0]._links.self.href)).to.eql(pm.collectionVariables.get(\"representationId\"))\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\"{{representationId}}\"]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connector-provider}}/api/offers/{{resourceId}}/representations",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"offers",
+								"{{resourceId}}",
+								"representations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create rule Prohibit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Rule is created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"let path = require('path');\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"ruleId\", path.basename(jsonData._links.self.href));\r",
+									"\r",
+									"console.log(\"New rule is \" + pm.collectionVariables.get(\"ruleId\"));\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const { v4: uuidv4 } = require('uuid');\r",
+									"pm.collectionVariables.set(\"permissionId\", uuidv4());\r",
+									"\r",
+									"console.log(\"New permission is \" + pm.collectionVariables.get(\"permissionId\"));\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Prohibit usage\",\r\n    \"value\": \"{\\\"@context\\\" : {\\\"ids\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/core\\/\\\", \\\"idsc\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/\\\"}, \\\"@type\\\" : \\\"ids:Prohibition\\\", \\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/autogen\\/permission\\/{{permissionId}}\\\", \\\"ids:description\\\" : [{\\\"@value\\\" : \\\"prohibit-access\\\", \\\"@type\\\" : \\\"http:\\/\\/www.w3.org\\/2001\\/XMLSchema#string\\\"}], \\\"ids:title\\\" : [{\\\"@value\\\" : \\\"Prohibit usage\\\", \\\"@type\\\" : \\\"http:\\/\\/www.w3.org\\/2001\\/XMLSchema#string\\\"}], \\\"ids:action\\\" : [{\\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/USE\\\"}]}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connector-provider}}/api/rules",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create rule Allow",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Rule is created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"let path = require('path');\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"ruleId\", path.basename(jsonData._links.self.href));\r",
+									"\r",
+									"console.log(\"New rule is \" + pm.collectionVariables.get(\"ruleId\"));\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const { v4: uuidv4 } = require('uuid');\r",
+									"pm.collectionVariables.set(\"permissionId\", uuidv4());\r",
+									"\r",
+									"console.log(\"New permission is \" + pm.collectionVariables.get(\"permissionId\"));\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Allow usage\",\r\n    \"value\": \"{\\\"@context\\\" : {\\\"ids\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/core\\/\\\", \\\"idsc\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/\\\"}, \\\"@type\\\" : \\\"ids:Permission\\\", \\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/autogen\\/permission\\/{{permissionId}}\\\", \\\"ids:description\\\" : [{\\\"@value\\\" : \\\"provide-access\\\", \\\"@type\\\" : \\\"http:\\/\\/www.w3.org\\/2001\\/XMLSchema#string\\\"}], \\\"ids:title\\\" : [{\\\"@value\\\" : \\\"Allow usage\\\", \\\"@type\\\" : \\\"http:\\/\\/www.w3.org\\/2001\\/XMLSchema#string\\\"}], \\\"ids:action\\\" : [{\\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/USE\\\"}]}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connector-provider}}/api/rules",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create rule Allow Notify",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Rule is created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"let path = require('path');\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"ruleId\", path.basename(jsonData._links.self.href));\r",
+									"\r",
+									"console.log(\"New rule is \" + pm.collectionVariables.get(\"ruleId\"));\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const { v4: uuidv4 } = require('uuid');\r",
+									"pm.collectionVariables.set(\"permissionId\", uuidv4());\r",
+									"pm.collectionVariables.set(\"constraintId\", uuidv4());\r",
+									"pm.collectionVariables.set(\"dutyId\", uuidv4());\r",
+									"pm.collectionVariables.set(\"usageNotifyTitle\", \"Use with care!\");\r",
+									"pm.collectionVariables.set(\"usageNotifyLink\", \"http://some/host.org/any/path/notification.html\");\r",
+									"\r",
+									"console.log(\"New permission is \" + pm.collectionVariables.get(\"permissionId\"));\r",
+									"console.log(\"New constraint is \" + pm.collectionVariables.get(\"constraintId\"));\r",
+									"console.log(\"New duty is \" + pm.collectionVariables.get(\"dutyId\"));\r",
+									"console.log(\"Usage notification at \" + pm.collectionVariables.get(\"usageNotifyLink\"));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Allow usage with notification\",\r\n    \"value\": \"{\\\"@context\\\" : {\\\"xsd\\\" : \\\"http:\\/\\/www.w3.org\\/2001\\/XMLSchema#\\\",  \\\"ids\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/core\\/\\\", \\\"idsc\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/\\\"}, \\\"@type\\\" : \\\"ids:Permission\\\", \\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/autogen\\/permission\\/{{permissionId}}\\\", \\\"ids:description\\\" : [{\\\"@value\\\" : \\\"usage-notification\\\", \\\"@type\\\" : \\\"http:\\/\\/www.w3.org\\/2001\\/XMLSchema#string\\\"}], \\\"ids:title\\\" : [{\\\"@value\\\" : \\\"Allow usage with notification\\\", \\\"@type\\\" : \\\"http:\\/\\/www.w3.org\\/2001\\/XMLSchema#string\\\"}], \\\"ids:action\\\" : [{\\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/USE\\\"}], \\\"ids:constraint\\\" : [{\\\"@type\\\" : \\\"ids:Constraint\\\", \\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/autogen\\/constraint\\/{{constraintId}}\\\", \\\"ids:leftOperand\\\" : {\\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/ENDPOINT\\\"}, \\\"ids:rightOperand\\\" : {\\\"@value\\\" : {{usageNotifyLink}}, \\\"@type\\\" : \\\"xsd:anyURI\\\"}, \\\"ids:operator\\\" : {\\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/DEFINES_AS\\\"}}], \\\"ids:postDuty\\\" : [{\\\"@type\\\" : \\\"ids:Duty\\\", \\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/autogen\\/duty\\/{{dutyId}}\\\", \\\"ids:title\\\" : [{\\\"@value\\\" : \\\"{{usageNotifyTitle}}\\\", \\\"@type\\\" : \\\"http:\\/\\/www.w3.org\\/2001\\/XMLSchema#string\\\"}], \\\"ids:action\\\" : [{\\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/NOTIFY\\\"}]}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connector-provider}}/api/rules",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create rule Allow Log",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Rule is created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"let path = require('path');\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"ruleId\", path.basename(jsonData._links.self.href));\r",
+									"\r",
+									"console.log(\"New rule is \" + pm.collectionVariables.get(\"ruleId\"));\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const { v4: uuidv4 } = require('uuid');\r",
+									"pm.collectionVariables.set(\"permissionId\", uuidv4());\r",
+									"pm.collectionVariables.set(\"dutyId\", uuidv4());\r",
+									"pm.collectionVariables.set(\"usageLogTitle\", \"Log usage!\");\r",
+									"\r",
+									"console.log(\"New permission is \" + pm.collectionVariables.get(\"permissionId\"));\r",
+									"console.log(\"New duty is \" + pm.collectionVariables.get(\"dutyId\"));\r",
+									"console.log(\"Usage notification at \" + pm.collectionVariables.get(\"usageNotifyLink\"));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Allow usage with logging\",\r\n    \"value\": \"{\\\"@context\\\" : {\\\"ids\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/core\\/\\\", \\\"idsc\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/\\\"}, \\\"@type\\\" : \\\"ids:Permission\\\", \\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/autogen\\/permission\\/{{permissionId}}\\\", \\\"ids:description\\\" : [{\\\"@value\\\" : \\\"usage-logging\\\", \\\"@type\\\" : \\\"http:\\/\\/www.w3.org\\/2001\\/XMLSchema#string\\\"}], \\\"ids:title\\\" : [{\\\"@value\\\" : \\\"Allow usage with logging\\\", \\\"@type\\\" : \\\"http:\\/\\/www.w3.org\\/2001\\/XMLSchema#string\\\"}], \\\"ids:action\\\" : [{\\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/USE\\\"}], \\\"ids:postDuty\\\" : [{\\\"@type\\\" : \\\"ids:Duty\\\", \\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/autogen\\/duty\\/{{dutyId}}\\\", \\\"ids:title\\\" : [{\\\"@value\\\" : \\\"{{usageLogTitle}}\\\", \\\"@type\\\" : \\\"http:\\/\\/www.w3.org\\/2001\\/XMLSchema#string\\\"}], \\\"ids:action\\\" : [{\\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/LOG\\\"}]}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connector-provider}}/api/rules",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create rule Allow Times",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Rule is created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"let path = require('path');\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"ruleId\", path.basename(jsonData._links.self.href));\r",
+									"\r",
+									"console.log(\"New rule is \" + pm.collectionVariables.get(\"ruleId\"));\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const { v4: uuidv4 } = require('uuid');\r",
+									"pm.collectionVariables.set(\"permissionId\", uuidv4());\r",
+									"pm.collectionVariables.set(\"constraintId\", uuidv4());\r",
+									"pm.collectionVariables.set(\"usageDuration\", \"PT1M30.5S\");\r",
+									"\r",
+									"console.log(\"New permission is \" + pm.collectionVariables.get(\"permissionId\"));\r",
+									"console.log(\"New constraint is \" + pm.collectionVariables.get(\"constraintId\"));\r",
+									"console.log(\"Usage duration is \" + pm.collectionVariables.get(\"usageDuration\"));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Allow usage for {{usageDuration}}\",\r\n    \"value\": \"{\\\"@context\\\" : {\\\"xsd\\\" : \\\"http:\\/\\/www.w3.org\\/2001\\/XMLSchema#\\\",  \\\"ids\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/core\\/\\\", \\\"idsc\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/\\\"}, \\\"@type\\\" : \\\"ids:Permission\\\", \\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/autogen\\/permission\\/{{permissionId}}\\\", \\\"ids:description\\\" : [{\\\"@value\\\" : \\\"duration-usage\\\", \\\"@type\\\" : \\\"http:\\/\\/www.w3.org\\/2001\\/XMLSchema#string\\\"}], \\\"ids:title\\\" : [{\\\"@value\\\" : \\\"Allow usage for {{usageDuration}}\\\", \\\"@type\\\" : \\\"http:\\/\\/www.w3.org\\/2001\\/XMLSchema#string\\\"}], \\\"ids:action\\\" : [{\\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/USE\\\"}], \\\"ids:constraint\\\" : [{\\\"@type\\\" : \\\"ids:Constraint\\\", \\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/autogen\\/constraint\\/{{constraintId}}\\\", \\\"ids:leftOperand\\\" : {\\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/ELAPSED_TIME\\\"}, \\\"ids:rightOperand\\\" : {\\\"@value\\\" : {{usageDuration}}, \\\"@type\\\" : \\\"xsd:duration\\\"}, \\\"ids:operator\\\" : {\\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/SHORTER_EQ\\\"}}]}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connector-provider}}/api/rules",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create rule Allow Duration",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Rule is created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"let path = require('path');\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"ruleId\", path.basename(jsonData._links.self.href));\r",
+									"\r",
+									"console.log(\"New rule is \" + pm.collectionVariables.get(\"ruleId\"));\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const { v4: uuidv4 } = require('uuid');\r",
+									"pm.collectionVariables.set(\"permissionId\", uuidv4());\r",
+									"pm.collectionVariables.set(\"constraintId\", uuidv4());\r",
+									"pm.collectionVariables.set(\"usageCount\", 5);\r",
+									"\r",
+									"console.log(\"New permission is \" + pm.collectionVariables.get(\"permissionId\"));\r",
+									"console.log(\"New constraint is \" + pm.collectionVariables.get(\"constraintId\"));\r",
+									"console.log(\"Usage count is \" + pm.collectionVariables.get(\"usageCount\"));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Allow usage {{usageCount}} times\",\r\n    \"value\": \"{\\\"@context\\\" : {\\\"xsd\\\" : \\\"http:\\/\\/www.w3.org\\/2001\\/XMLSchema#\\\",  \\\"ids\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/core\\/\\\", \\\"idsc\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/\\\"}, \\\"@type\\\" : \\\"ids:Permission\\\", \\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/autogen\\/permission\\/{{permissionId}}\\\", \\\"ids:description\\\" : [{\\\"@value\\\" : \\\"n-times-usage\\\", \\\"@type\\\" : \\\"http:\\/\\/www.w3.org\\/2001\\/XMLSchema#string\\\"}], \\\"ids:title\\\" : [{\\\"@value\\\" : \\\"Allow usage {{usageCount}} times\\\", \\\"@type\\\" : \\\"http:\\/\\/www.w3.org\\/2001\\/XMLSchema#string\\\"}], \\\"ids:action\\\" : [{\\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/USE\\\"}], \\\"ids:constraint\\\" : [{\\\"@type\\\" : \\\"ids:Constraint\\\", \\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/autogen\\/constraint\\/{{constraintId}}\\\", \\\"ids:leftOperand\\\" : {\\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/COUNT\\\"}, \\\"ids:rightOperand\\\" : {\\\"@value\\\" : {{usageCount}}, \\\"@type\\\" : \\\"xsd:double\\\"}, \\\"ids:operator\\\" : {\\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/LTEQ\\\"}}]}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connector-provider}}/api/rules",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create rule Allow Interval",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Rule is created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"let path = require('path');\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"ruleId\", path.basename(jsonData._links.self.href));\r",
+									"\r",
+									"console.log(\"New rule is \" + pm.collectionVariables.get(\"ruleId\"));\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const { v4: uuidv4 } = require('uuid');\r",
+									"pm.collectionVariables.set(\"permissionId\", uuidv4());\r",
+									"pm.collectionVariables.set(\"constraintId\", uuidv4());\r",
+									"pm.collectionVariables.set(\"constraint2Id\", uuidv4());\r",
+									"\r",
+									"let usage = new Date();\r",
+									"usage.setDate(usage.getDate() + 3); //3 days from now\r",
+									"pm.collectionVariables.set(\"usageStart\", usage.toISOString());\r",
+									"\r",
+									"usage.setDate(usage.getDate() + 20);\r",
+									"pm.collectionVariables.set(\"usageEnd\", usage.toISOString()); // 20 days period\r",
+									"\r",
+									"console.log(\"New permission is \" + pm.collectionVariables.get(\"permissionId\"));\r",
+									"console.log(\"New constraint 1 is \" + pm.collectionVariables.get(\"constraintId\"));\r",
+									"console.log(\"New constraint 2 is \" + pm.collectionVariables.get(\"constraint2Id\"));\r",
+									"console.log(\"Usage start is \" + pm.collectionVariables.get(\"usagestart\"));\r",
+									"console.log(\"Usage end is \" + pm.collectionVariables.get(\"usageEnd\"));\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Allow usage from {{usageStart}} to {{usageEnd}}\",\r\n    \"value\": \"{\\\"@context\\\" : {\\\"xsd\\\" : \\\"http:\\/\\/www.w3.org\\/2001\\/XMLSchema#\\\",  \\\"ids\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/core\\/\\\", \\\"idsc\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/\\\"}, \\\"@type\\\" : \\\"ids:Permission\\\", \\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/autogen\\/permission\\/{{permissionId}}\\\", \\\"ids:description\\\" : [{\\\"@value\\\" : \\\"usage-during-interval\\\", \\\"@type\\\" : \\\"http:\\/\\/www.w3.org\\/2001\\/XMLSchema#string\\\"}], \\\"ids:title\\\" : [{\\\"@value\\\" : \\\"Allow usage from {{usageStart}} to {{usageEnd}}\\\", \\\"@type\\\" : \\\"http:\\/\\/www.w3.org\\/2001\\/XMLSchema#string\\\"}], \\\"ids:action\\\" : [{\\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/USE\\\"}], \\\"ids:constraint\\\" : [{\\\"@type\\\" : \\\"ids:Constraint\\\", \\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/autogen\\/constraint\\/{{constraintId}}\\\", \\\"ids:leftOperand\\\" : {\\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/POLICY_EVALUATION_TIME\\\"}, \\\"ids:rightOperand\\\" : {\\\"@value\\\" : {{usageStart}}, \\\"@type\\\" : \\\"xsd:dateTimeStamp\\\"}, \\\"ids:operator\\\" : {\\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/AFTER\\\"}}, {\\\"@type\\\" : \\\"ids:Constraint\\\", \\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/autogen\\/constraint\\/{{constraint2Id}}\\\", \\\"ids:leftOperand\\\" : {\\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/POLICY_EVALUATION_TIME\\\"}, \\\"ids:rightOperand\\\" : {\\\"@value\\\" : {{usageEnd}}, \\\"@type\\\" : \\\"xsd:dateTimeStamp\\\"}, \\\"ids:operator\\\" : {\\\"@id\\\" : \\\"https:\\/\\/w3id.org\\/idsa\\/code\\/BEFORE\\\"}}]}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connector-provider}}/api/rules",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create contract",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Contract is created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"let path = require('path')\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"contractId\", path.basename(jsonData._links.self.href));\r",
+									"\r",
+									"console.log(\"New contract is \" + pm.collectionVariables.get(\"ruleId\"));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var contractEnd = new Date();\r",
+									"contractEnd.setMonth(contractEnd.getMonth() + 1);\r",
+									"pm.collectionVariables.set(\"contract-end\", contractEnd.toISOString());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Contract for {{resource-title}}\",\r\n  \"description\": \"Description of contract for {{resource-title}}\",\r\n  \"end\": \"{{contract-end}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connector-provider}}/api/contracts",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"contracts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add rule to contract",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Rule added\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Rule added to contract\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    let path = require('path')\r",
+									"    pm.expect(path.basename(jsonData._embedded.rules[0]._links.self.href)).to.eql(pm.collectionVariables.get(\"ruleId\"))\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\"{{ruleId}}\"]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connector-provider}}/api/contracts/{{contractId}}/rules",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"contracts",
+								"{{contractId}}",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add contract to resource",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Contract added\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Contract added to resource\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    let path = require('path');\r",
+									"    pm.expect(path.basename(jsonData._embedded.contracts[0]._links.self.href)).to.eql(pm.collectionVariables.get(\"contractId\"))\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\"{{contractId}}\"]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connector-provider}}/api/offers/{{resourceId}}/contracts",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"offers",
+								"{{resourceId}}",
+								"contracts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add resource to catalog",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Resource added\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Resource added to catalog\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    let path = require('path');\r",
+									"    pm.expect(path.basename(jsonData._embedded.resources[0]._links.self.href)).to.eql(pm.collectionVariables.get(\"resourceId\"))\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\"{{resourceId}}\"]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connector-provider}}/api/catalogs/{{catalogId}}/offers",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"catalogs",
+								"{{catalogId}}",
+								"offers"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Discover Resource",
+			"item": [
+				{
+					"name": "List catalogs",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Got catalogs\", function () {\r",
+									"    let path = require('path');\r",
+									"    var jsonData = pm.response.json();\r",
+									"\r",
+									"    if(jsonData._embedded.catalogs.length > 0) {\r",
+									"        var catalog = jsonData._embedded.catalogs[0];\r",
+									"        pm.collectionVariables.set(\"catalogId\", path.basename(catalog._links.self.href));\r",
+									"        console.log(\"First catalog is \" + pm.collectionVariables.get(\"catalogId\"));\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/hal+json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{connector-provider}}/api/catalogs",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"catalogs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get catalog",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Catalog exists\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/hal+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connector-provider}}/api/catalogs/{{catalogId}}",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"catalogs",
+								"{{catalogId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List resources",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Got resources\", function () {\r",
+									"    let path = require('path');\r",
+									"    var jsonData = pm.response.json();\r",
+									"\r",
+									"    if(jsonData._embedded.resources.length > 0) {\r",
+									"        var resource = jsonData._embedded.resources[0];\r",
+									"        pm.collectionVariables.set(\"resourceId\", path.basename(resource._links.self.href));\r",
+									"        console.log(\"First resource is \" + pm.collectionVariables.get(\"resourceId\"));\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{connector-provider}}/api/catalogs/{{catalogId}}/offers",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"catalogs",
+								"{{catalogId}}",
+								"offers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get resource",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Resource exists\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connector-provider}}/api/offers/{{resourceId}}",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"offers",
+								"{{resourceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List representations",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Got representations\", function () {\r",
+									"    let path = require('path');\r",
+									"    var jsonData = pm.response.json();\r",
+									"\r",
+									"    if(jsonData._embedded.representations.length > 0) {\r",
+									"        var representation = jsonData._embedded.representations[0];\r",
+									"        pm.collectionVariables.set(\"representationId\", path.basename(representation._links.self.href));\r",
+									"        console.log(\"First representation is \" + pm.collectionVariables.get(\"representationId\"));\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{connector-provider}}/api/offers/{{resourceId}}/representations",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"offers",
+								"{{resourceId}}",
+								"representations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get representation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Representation exists\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connector-provider}}/api/representations/{{representationId}}",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"representations",
+								"{{representationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List artifacts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Got artifacts\", function () {\r",
+									"    let path = require('path');\r",
+									"    var jsonData = pm.response.json();\r",
+									"\r",
+									"    if(jsonData._embedded.artifacts.length > 0) {\r",
+									"        var artifact = jsonData._embedded.artifacts[0];\r",
+									"        pm.collectionVariables.set(\"artifactId\", path.basename(artifact._links.self.href));\r",
+									"        console.log(\"First artifact is \" + pm.collectionVariables.get(\"artifactId\"));\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{connector-provider}}/api/representations/{{representationId}}/artifacts",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"representations",
+								"{{representationId}}",
+								"artifacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get artifact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Artifact exists\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/hal+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connector-provider}}/api/artifacts/{{artifactId}}",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"artifacts",
+								"{{artifactId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List contracts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Got contracts\", function () {\r",
+									"    let path = require('path');\r",
+									"    var jsonData = pm.response.json();\r",
+									"\r",
+									"    if(jsonData._embedded.contracts.length > 0) {\r",
+									"        var contract = jsonData._embedded.contracts[0];\r",
+									"        pm.collectionVariables.set(\"contractId\", path.basename(contract._links.self.href));\r",
+									"        console.log(\"First contract is \" + pm.collectionVariables.get(\"contractId\"));\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{connector-provider}}/api/offers/{{resourceId}}/contracts",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"offers",
+								"{{resourceId}}",
+								"contracts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get contract",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Contract exists\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/hal+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connector-provider}}/api/contracts/{{contractId}}",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"contracts",
+								"{{contractId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List rules",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Got rules\", function () {\r",
+									"    let path = require('path');\r",
+									"    var jsonData = pm.response.json();\r",
+									"\r",
+									"    if(jsonData._embedded.rules.length > 0) {\r",
+									"        var rule = jsonData._embedded.rules[0];\r",
+									"        pm.collectionVariables.set(\"ruleId\", path.basename(rule._links.self.href));\r",
+									"        console.log(\"First rule is \" + pm.collectionVariables.get(\"ruleId\"));\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{connector-provider}}/api/contracts/{{contractId}}/rules",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"contracts",
+								"{{contractId}}",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get rule",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Rule exists\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/hal+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connector-provider}}/api/rules/{{ruleId}}",
+							"host": [
+								"{{connector-provider}}"
+							],
+							"path": [
+								"api",
+								"rules",
+								"{{ruleId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Consume Resource",
+			"item": [
+				{
+					"name": "Request a Provider Connector’s Self-description",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"A catalog exists\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[\"ids:resourceCatalog\"].length).to.be.above(0)\r",
+									"})\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"catalogProviderId\", jsonData[\"ids:resourceCatalog\"][0][\"@id\"]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{conector_consumer}}/api/ids/description?recipient={{conector_provider}}/api/ids/data",
+							"host": [
+								"{{conector_consumer}}"
+							],
+							"path": [
+								"api",
+								"ids",
+								"description"
+							],
+							"query": [
+								{
+									"key": "recipient",
+									"value": "{{conector_provider}}/api/ids/data"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get resource, representation, artifact and contract from the Provider Connector Catalog",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"A resource exists\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[\"ids:offeredResource\"].length).to.be.above(0)\r",
+									"})\r",
+									"\r",
+									"pm.collectionVariables.set(\"resourceProviderId\", jsonData[\"ids:offeredResource\"][0][\"@id\"]);\r",
+									"\r",
+									"pm.test(\"A representation exists\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[\"ids:offeredResource\"][0][\"ids:representation\"].length).to.be.above(0)\r",
+									"})\r",
+									"\r",
+									"pm.collectionVariables.set(\"representationProviderId\", jsonData[\"ids:offeredResource\"][0][\"ids:representation\"][0][\"@id\"]);\r",
+									"\r",
+									"pm.test(\"An artifact exists\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[\"ids:offeredResource\"][0][\"ids:representation\"][0][\"ids:instance\"].length).to.be.above(0)\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.collectionVariables.set(\"artifactProviderId\", jsonData[\"ids:offeredResource\"][0][\"ids:representation\"][0][\"ids:instance\"][0][\"@id\"]);\r",
+									"\r",
+									"\r",
+									"pm.test(\"An contract exists\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[\"ids:offeredResource\"][0][\"ids:contractOffer\"].length).to.be.above(0)\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.collectionVariables.set(\"contractOfferProviderId\", jsonData[\"ids:offeredResource\"][0][\"ids:contractOffer\"][0][\"@id\"]);\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{conector_consumer}}/api/ids/description?recipient={{conector_provider}}/api/ids/data&elementId={{catalogProviderId}}",
+							"host": [
+								"{{conector_consumer}}"
+							],
+							"path": [
+								"api",
+								"ids",
+								"description"
+							],
+							"query": [
+								{
+									"key": "recipient",
+									"value": "{{conector_provider}}/api/ids/data"
+								},
+								{
+									"key": "elementId",
+									"value": "{{catalogProviderId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Negotiate a Contract Agreement",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Agreement is created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"agreementProviderId\", jsonData[\"remoteId\"]);\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[{\r\n\"@context\" : {\r\n    \"ids\" : \"https://w3id.org/idsa/core/\",\r\n    \"idsc\" : \"https://w3id.org/idsa/code/\"\r\n  },\r\n  \"@type\" : \"ids:Permission\",\r\n  \"@id\" : \"https://w3id.org/idsa/autogen/permission/aedd95ef-460c-4b6c-bc16-033ffe5e70d8\",\r\n  \"ids:description\" : [ {\r\n    \"@value\" : \"provide-access\",\r\n    \"@type\" : \"http://www.w3.org/2001/XMLSchema#string\"\r\n  } ],\r\n  \"ids:title\" : [ {\r\n    \"@value\" : \"Allow Data Usage\",\r\n    \"@type\" : \"http://www.w3.org/2001/XMLSchema#string\"\r\n  } ],\r\n  \"ids:action\" : [ {\r\n    \"@id\" : \"https://w3id.org/idsa/code/USE\"\r\n  } ],\r\n      \"ids:target\": \"{{artifactProviderId}}\"\r\n    }]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{conector_consumer}}/api/ids/contract?recipient={{conector_provider}}/api/ids/data&resourceIds={{resourceProviderId}}&artifactIds={{artifactProviderId}}&download=false",
+							"host": [
+								"{{conector_consumer}}"
+							],
+							"path": [
+								"api",
+								"ids",
+								"contract"
+							],
+							"query": [
+								{
+									"key": "recipient",
+									"value": "{{conector_provider}}/api/ids/data"
+								},
+								{
+									"key": "resourceIds",
+									"value": "{{resourceProviderId}}"
+								},
+								{
+									"key": "artifactIds",
+									"value": "{{artifactProviderId}}"
+								},
+								{
+									"key": "download",
+									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get local (consumer) artifact Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let path = require(\"path\");\r",
+									"pm.test(\"Find artifact locally\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    for (var idx in jsonData._embedded.artifacts){\r",
+									"        if (jsonData._embedded.artifacts[idx][\"remoteId\"]===pm.collectionVariables.get(\"artifactProviderId\")){\r",
+									"            var artifact = jsonData._embedded.artifacts[idx];\r",
+									"            pm.collectionVariables.set(\"artifactConsumerId\", path.basename(artifact[\"_links\"][\"self\"][\"href\"]));\r",
+									"            return true;\r",
+									"        }\r",
+									"    }\r",
+									"    return false;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{conector_consumer}}/api/artifacts",
+							"host": [
+								"{{conector_consumer}}"
+							],
+							"path": [
+								"api",
+								"artifacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Access the Data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get data\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{conector_consumer}}/api/artifacts/{{artifactConsumerId}}/data/**?download=true&agreementUri={{agreementProviderId}}",
+							"host": [
+								"{{conector_consumer}}"
+							],
+							"path": [
+								"api",
+								"artifacts",
+								"{{artifactConsumerId}}",
+								"data",
+								"**"
+							],
+							"query": [
+								{
+									"key": "download",
+									"value": "true"
+								},
+								{
+									"key": "agreementUri",
+									"value": "{{agreementProviderId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "{{password}}",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "{{username}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "connector-provider",
+			"value": "https://localhost:8081"
+		},
+		{
+			"key": "connector-consumer",
+			"value": "https://localhost:8082"
+		},
+		{
+			"key": "connectorId",
+			"value": ""
+		},
+		{
+			"key": "username",
+			"value": "admin"
+		},
+		{
+			"key": "password",
+			"value": "password"
+		},
+		{
+			"key": "resource-title",
+			"value": "My first resource"
+		},
+		{
+			"key": "resource-description",
+			"value": "This is just a test"
+		},
+		{
+			"key": "representation-language",
+			"value": "EN-UK"
+		},
+		{
+			"key": "representation-standard",
+			"value": "ISO-IEC 33854"
+		},
+		{
+			"key": "resource-keywords",
+			"value": "\"big\", \"fast\", \"red\""
+		},
+		{
+			"key": "resource-publisher",
+			"value": "EGI"
+		},
+		{
+			"key": "resource-license",
+			"value": "http://creativecommons.org/licenses/by/4.0/"
+		},
+		{
+			"key": "resource-sovereign",
+			"value": "EGI"
+		},
+		{
+			"key": "contract-end",
+			"value": ""
+		},
+		{
+			"key": "catalogId",
+			"value": ""
+		},
+		{
+			"key": "resourceId",
+			"value": ""
+		},
+		{
+			"key": "representationId",
+			"value": ""
+		},
+		{
+			"key": "artifactId",
+			"value": ""
+		},
+		{
+			"key": "contractId",
+			"value": ""
+		},
+		{
+			"key": "ruleId",
+			"value": ""
+		},
+		{
+			"key": "permissionId",
+			"value": ""
+		},
+		{
+			"key": "constraintId",
+			"value": ""
+		},
+		{
+			"key": "constraint2Id",
+			"value": ""
+		},
+		{
+			"key": "dutyId",
+			"value": ""
+		},
+		{
+			"key": "usageCount",
+			"value": ""
+		},
+		{
+			"key": "usageStart",
+			"value": ""
+		},
+		{
+			"key": "usageEnd",
+			"value": ""
+		},
+		{
+			"key": "usageDuration",
+			"value": ""
+		},
+		{
+			"key": "usageNotifyTitle",
+			"value": ""
+		},
+		{
+			"key": "usageNotifyLink",
+			"value": ""
+		},
+		{
+			"key": "usageLogTitle",
+			"value": ""
+		}
+	]
+}

@@ -1,0 +1,40 @@
+datahub:
+  onezone-host: https://datahub.egi.eu
+  onezone-token: "MDAxY2xvY2F00aW9uIGRhdGFodWIuZWdpLmV1CjAwNmJpZGVudGlmaWVyIDIvbm1kL3Vzci00zM2JjY2RlYTk4ZTMwOGM00YjI00ZTlkOTZlNTVlOTI3NmNoNjU2MC9hY3QvOWI3ODhiMzI3YmM3MTY4MTYxYWE4NDVkMDUwY2YwNGFjaDhiM2MKMDAxOWNpZCBpbnRlcmZhY2UgPSByZXN00CjAwMWVjaWQgc2VydmljZSA9IG96dy1vbmV6b25lCjAwMmZzaWduYXR1cmUgdblkDO0155MMmSi2OqL00fPkoywTh3PaX23KKFmFZ8OYoK"
+  oneprovider-token: "MDAxY2xvY2F00aW9uIGRhdGFodWIuZWdpLmV1CjAwNmJpZGVudGlmaWVyIDIvbm1kL3Vzci00zM2JjY2RlYTk4ZTMwOGM00YjI00ZTlkOTZlNTVlOTI3NmNoNjU2MC9hY3QvNjA4ZTA4MTM1NGJmY2IzMWVhMmNkYzUwYWU4OGJhMTNjaDQxODkKMDAxOWNpZCBpbnRlcmZhY2UgPSByZXN00CjAwMThjaWQgc2VydmljZSA9IG9wdy00qCjAwMmZzaWduYXR1cmUgOylfOYb8NKgnvThk5ifJud00BHLaHMckkJQG2V58p01Z4K"
+  file-token-validity-days: 5 # at most 7 days
+
+idsa:
+  connector: https://localhost:8081
+  username: admin
+  password: password
+  # idsa-api/mp-rest/hostnameVerifier: io.quarkus.restclient.NoopHostnameVerifier
+
+quarkus:
+  log:
+    level: INFO
+    min-level: DEBUG
+    console:
+      enable: true
+      level: INFO
+      format: "%d{HH:mm:ss} %-5p [%c{2.}]] (%t) %s%e%n"
+    file:
+      enable: true
+      path: ./datahub-connector.log
+      level: INFO
+      format: "%d{HH:mm:ss} %-5p [%c{2.}]] (%t) %s%e%n"
+    category:
+      "egi.eu.ActionResource":
+        level: DEBUG
+  swagger-ui:
+    always-include: true
+    path: swagger-ui
+  smallrye-openapi:
+    path: /api/docs
+    info-title: EGI DataHub Connector API
+    info-description: REST API to publish spaces to an IDSA connector
+    info-version: 1.0
+  jackson:
+    fail-on-unknown-properties: false
+  tls:
+    trust-all: true

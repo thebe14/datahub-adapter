@@ -1,0 +1,62 @@
+{
+    "@context" : {
+      "ids" : "https://w3id.org/idsa/core/",
+      "idsc" : "https://w3id.org/idsa/code/"
+    },
+    "@type" : "ids:ConfigurationModel",
+    "@id" : "https://w3id.org/idsa/autogen/configurationModel/${IDS_MODEL_ID}",
+    "ids:configurationModelLogLevel" : {
+      "@id" : "idsc:MINIMAL_LOGGING"
+    },
+    "ids:connectorDeployMode" : {
+      "@id" : "idsc:${DEPLOY_MODE}"
+    },
+    "ids:connectorDescription" : {
+      "@type" : "ids:BaseConnector",
+      "@id" : "${COMPONENT_ID}",
+      "ids:publicKey" : {
+        "@type" : "ids:PublicKey",
+        "@id" : "https://w3id.org/idsa/autogen/publicKey/${IDS_PUBKEY_ID}",
+        "ids:keyType" : {
+          "@id" : "idsc:RSA"
+        },
+        "ids:keyValue" : "${COMPONENT_CERTIFICATE}"
+      },
+      "ids:description" : [ {
+        "@value" : "${PROJECT_DESCRIPTION}",
+        "@type" : "http://www.w3.org/2001/XMLSchema#string"
+      } ],
+      "ids:version" : "@project.version@",
+      "ids:hasDefaultEndpoint" : {
+        "@type" : "ids:ConnectorEndpoint",
+        "@id" : "https://w3id.org/idsa/autogen/connectorEndpoint/${IDS_ENDPOINT_ID}",
+        "ids:accessURL" : {
+          "@id" : "${COMPONENT_ENDPOINT}"
+        }
+      },
+      "ids:outboundModelVersion" : "4.2.3",
+      "ids:inboundModelVersion" : [ "4.0.0", "4.1.0", "4.1.2", "4.2.0", "4.2.1", "4.2.2", "4.2.3" ],
+      "ids:title" : [ {
+        "@value" : "${TITLE}",
+        "@type" : "http://www.w3.org/2001/XMLSchema#string"
+      } ],
+      "ids:securityProfile" : {
+        "@id" : "idsc:BASE_SECURITY_PROFILE"
+      },
+      "ids:curator" : {
+        "@id" : "${CURATOR}"
+      },
+      "ids:maintainer" : {
+        "@id" : "${MAINTAINER}"
+      }
+    },
+    "ids:trustStore" : {
+      "@id" : "file:///conf/my-truststore.p12"
+    },
+    "ids:connectorStatus" : {
+      "@id" : "idsc:CONNECTOR_ONLINE"
+    },
+    "ids:keyStore" : {
+      "@id" : "file:///conf/my-keystore.p12"
+    }
+  }

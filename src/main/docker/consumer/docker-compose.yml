@@ -1,0 +1,22 @@
+version: '3.5'
+
+services:
+  connector:
+    #image: ghcr.io/international-data-spaces-association/dataspace-connector:6.2.0
+    container_name: consumer
+    build:
+      context: ./connector
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8080"
+    env_file:
+      - ./connector/connector.env
+    environment:
+      - SPRING_SECURITY_USER_NAME=${IDSA_USERNAME:-admin}
+      - SPRING_SECURITY_USER_PASSWORD=${IDSA_PASSWORD:-password}
+    networks:
+      - local
+
+networks:
+  local:
+    driver: bridge

@@ -1,0 +1,62 @@
+version: '3.5'
+
+services:
+  connector:
+    #image: ghcr.io/international-data-spaces-association/dataspace-connector:6.2.0
+    container_name: provider
+    build:
+      context: ./connector
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
+    env_file:
+      - ./connector/connector.env
+    environment:
+      - TITLE=${IDSA_TITLE:-'EGI DataHub Connector'}
+      - SPRING_SECURITY_USER_NAME=${IDSA_USERNAME:-admin}
+      - SPRING_SECURITY_USER_PASSWORD=${IDSA_PASSWORD:-password}
+    networks:
+      - local
+
+  connector-ui:
+    #image: ghcr.io/international-data-spaces-association/dataspace-connector-ui:8.5.1
+    container_name: provider-ui
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    depends_on:
+      - connector
+    env_file:
+      - ./ui/connector-ui.env
+    environment:
+      - UI_TITLE="${IDSA_TITLE:-'EGI DataHub Connector'} UI"
+      - CONNECTOR_USER=${IDSA_USERNAME:-admin}
+      - CONNECTOR_PASSWORD=${IDSA_PASSWORD:-password}
+      - CONNECTOR_URL=https://connector:8080
+    ports:
+      - "8082:8083"
+    networks:
+      - local
+    restart: always
+
+  adapter:
+    container_name: adapter
+    build:
+      context: ../../../..
+      dockerfile: src/main/docker/provider/adaptor/Dockerfile
+    depends_on:
+      - connector
+    env_file:
+      - ./adaptor/adaptor.env
+    environment:
+      - IDSA_USERNAME=${IDSA_USERNAME:-admin}
+      - IDSA_PASSWORD=${IDSA_PASSWORD:-password}
+      - IDSA_CONNECTOR=https://connector:8080
+    ports:
+      - "8080:8080"
+    networks:
+      - local
+
+networks:
+  local:
+    driver: bridge

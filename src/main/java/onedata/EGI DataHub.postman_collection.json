@@ -1,0 +1,664 @@
+{
+	"info": {
+		"_postman_id": "4f8cde1b-c34f-40c0-a74a-34f65f95f553",
+		"name": "EGI DataHub",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Current user info",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{onezone-token}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "X-Auth-Token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{onedata-host}}/api/v3/onezone/user",
+					"protocol": "https",
+					"host": [
+						"{{onedata-host}}"
+					],
+					"path": [
+						"api",
+						"v3",
+						"onezone",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get space providers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"There are supporting providers\", function () {   \r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('providers');\r",
+							"    pm.expect(Object.keys(jsonData.providers).length).to.above(0);\r",
+							"})\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"providerId\", Object.keys(jsonData.providers)[0]);\r",
+							"pm.globals.set(\"onedata-space\", pm.collectionVariables.get(\"spaceId\"));\r",
+							"\r",
+							"console.log(\"First provider is \" + pm.collectionVariables.get(\"providerId\"));\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{onezone-token}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "X-Auth-Token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{onedata-host}}/api/v3/onezone/spaces/{{spaceId}}",
+					"protocol": "https",
+					"host": [
+						"{{onedata-host}}"
+					],
+					"path": [
+						"api",
+						"v3",
+						"onezone",
+						"spaces",
+						"{{spaceId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get provider hostname",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Provider has hostname\", function () {   \r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('domain');\r",
+							"})\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"provider-host\", jsonData.domain);\r",
+							"\r",
+							"console.log(\"First provider hostname is \" + pm.collectionVariables.get(\"provider-host\"));\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{onezone-token}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "X-Auth-Token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{onedata-host}}/api/v3/onezone/providers/{{providerId}}",
+					"protocol": "https",
+					"host": [
+						"{{onedata-host}}"
+					],
+					"path": [
+						"api",
+						"v3",
+						"onezone",
+						"providers",
+						"{{providerId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get space root folder",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Space has root folder Id\", function () {   \r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('fileId');\r",
+							"})\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"folderId\", jsonData.fileId);\r",
+							"\r",
+							"console.log(\"Root folder is \" + pm.collectionVariables.get(\"folderId\"));\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{provider-host}}/api/v3/oneprovider/spaces/{{spaceId}}",
+					"protocol": "https",
+					"host": [
+						"{{provider-host}}"
+					],
+					"path": [
+						"api",
+						"v3",
+						"oneprovider",
+						"spaces",
+						"{{spaceId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List children",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"There are files in the folder\", function () {   \r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('children');\r",
+							"    pm.expect(jsonData.children.length).to.above(0);\r",
+							"})\r",
+							"\r",
+							"var fileIndex = 0;\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"fileId\", jsonData.children[fileIndex].id);\r",
+							"pm.collectionVariables.set(\"fileName\", jsonData.children[fileIndex].name);\r",
+							"\r",
+							"console.log(\"First file is \" + pm.collectionVariables.get(\"fileName\") + \" (\" + pm.collectionVariables.get(\"fileId\") + \")\");\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{provider-host}}/api/v3/oneprovider/data/{{folderId}}/children",
+					"protocol": "https",
+					"host": [
+						"{{provider-host}}"
+					],
+					"path": [
+						"api",
+						"v3",
+						"oneprovider",
+						"data",
+						"{{folderId}}",
+						"children"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get file details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"File has name and type\", function () {   \r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('name');\r",
+							"    pm.expect(jsonData).to.have.property('type');\r",
+							"})\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"fileName\", jsonData.name);\r",
+							"pm.collectionVariables.set(\"fileType\", jsonData.type);\r",
+							"\r",
+							"pm.globals.set(\"onedata-file-name\", jsonData.name);\r",
+							"pm.globals.set(\"onedata-file-url\", \"https://\"+pm.collectionVariables.get(\"provider-host\")+\"/api/v3/oneprovider/data/\"+pm.collectionVariables.get(\"fileId\")+\"/content\");\r",
+							"\r",
+							"console.log(\"Child named \" + pm.collectionVariables.get(\"fileName\") + \" is a \" + (pm.collectionVariables.get(\"fileType\") == \"dir\" ? \"folder\" : \"file\"));\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{provider-host}}/api/v3/oneprovider/data/{{fileId}}",
+					"protocol": "https",
+					"host": [
+						"{{provider-host}}"
+					],
+					"path": [
+						"api",
+						"v3",
+						"oneprovider",
+						"data",
+						"{{fileId}}"
+					],
+					"query": [
+						{
+							"key": "objectName;metadata",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get file metadata",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{provider-host}}/api/v3/oneprovider/data/{{fileId}}/metadata/xattrs",
+					"protocol": "https",
+					"host": [
+						"{{provider-host}}"
+					],
+					"path": [
+						"api",
+						"v3",
+						"oneprovider",
+						"data",
+						"{{fileId}}",
+						"metadata",
+						"xattrs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Set file metadata",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"idsa:{{connectorId}}\": \"428094237892378492789472894728974289\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "https://{{provider-host}}/api/v3/oneprovider/data/{{fileId}}/metadata/xattrs",
+					"protocol": "https",
+					"host": [
+						"{{provider-host}}"
+					],
+					"path": [
+						"api",
+						"v3",
+						"oneprovider",
+						"data",
+						"{{fileId}}",
+						"metadata",
+						"xattrs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get restricted file token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"file-token\", jsonData.token);\r",
+							"pm.globals.set(\"onedata-file-token\", jsonData.token);\r",
+							"\r",
+							"console.log(\"Restricted file token is \" + pm.collectionVariables.get(\"file-token\"));\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{onezone-token}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "X-Auth-Token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"type\": {\r\n        \"accessToken\":{ \"fhskj\": \"fsd\"}\r\n    },\r\n    \"caveats\": [\r\n        {\r\n            \"type\": \"time\", \r\n            \"validUntil\": 1632584605\r\n        },\r\n        {\r\n            \"type\": \"data.readonly\"\r\n        },\r\n        {\r\n            \"type\": \"data.objectid\",\r\n            \"whitelist\": [ \"{{fileId}}\" ]\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{onedata-host}}/api/v3/onezone/user/tokens/temporary",
+					"protocol": "https",
+					"host": [
+						"{{onedata-host}}"
+					],
+					"path": [
+						"api",
+						"v3",
+						"onezone",
+						"user",
+						"tokens",
+						"temporary"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get file content",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{file-token}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "X-Auth-Token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{provider-host}}/api/v3/oneprovider/data/{{fileId}}/content",
+					"protocol": "https",
+					"host": [
+						"{{provider-host}}"
+					],
+					"path": [
+						"api",
+						"v3",
+						"oneprovider",
+						"data",
+						"{{fileId}}",
+						"content"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "{{oneprovider-token}}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "X-Auth-Token",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "connectorId",
+			"value": "urn:euh4d:ids:connectors:EGI-Test"
+		},
+		{
+			"key": "onedata-host",
+			"value": "datahub.egi.eu"
+		},
+		{
+			"key": "onezone-token",
+			"value": "MDAxY2xvY2F00aW9uIGRhdGFodWIuZWdpLmV1CjAwNmJpZGVudGlmaWVyIDIvbm1kL3Vzci00zM2JjY2RlYTk4ZTMwOGM00YjI00ZTlkOTZlNTVlOTI3NmNoNjU2MC9hY3QvOWI3ODhiMzI3YmM3MTY4MTYxYWE4NDVkMDUwY2YwNGFjaDhiM2MKMDAxOWNpZCBpbnRlcmZhY2UgPSByZXN00CjAwMWVjaWQgc2VydmljZSA9IG96dy1vbmV6b25lCjAwMmZzaWduYXR1cmUgdblkDO0155MMmSi2OqL00fPkoywTh3PaX23KKFmFZ8OYoK"
+		},
+		{
+			"key": "oneprovider-token",
+			"value": "MDAxY2xvY2F00aW9uIGRhdGFodWIuZWdpLmV1CjAwNmJpZGVudGlmaWVyIDIvbm1kL3Vzci00zM2JjY2RlYTk4ZTMwOGM00YjI00ZTlkOTZlNTVlOTI3NmNoNjU2MC9hY3QvNjA4ZTA4MTM1NGJmY2IzMWVhMmNkYzUwYWU4OGJhMTNjaDQxODkKMDAxOWNpZCBpbnRlcmZhY2UgPSByZXN00CjAwMThjaWQgc2VydmljZSA9IG9wdy00qCjAwMmZzaWduYXR1cmUgOylfOYb8NKgnvThk5ifJud00BHLaHMckkJQG2V58p01Z4K"
+		},
+		{
+			"key": "spaceId",
+			"value": "48c967067b37c4289f721a5e9ef81f9bch95ba"
+		},
+		{
+			"key": "providerId",
+			"value": ""
+		},
+		{
+			"key": "provider-host",
+			"value": ""
+		},
+		{
+			"key": "folderId",
+			"value": ""
+		},
+		{
+			"key": "fileId",
+			"value": ""
+		},
+		{
+			"key": "fileType",
+			"value": ""
+		},
+		{
+			"key": "fileName",
+			"value": ""
+		},
+		{
+			"key": "file-token",
+			"value": ""
+		}
+	]
+}
